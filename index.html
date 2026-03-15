@@ -1,0 +1,825 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alter Iterskiy · Portfolio</title>
+  <meta name="description" content="Portfolio of Alter Iterskiy – civil engineering student, homelab builder, and technology enthusiast." />
+  <link rel="icon" href="assets/profile.png" type="image/png" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-card: #020817;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.16);
+      --accent-soft-strong: rgba(79, 70, 229, 0.35);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.75);
+      --radius: 18px;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --max-width: 1040px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0b1120 0, #020617 48%, #000 100%);
+      color: var(--text);
+      font-family: var(--font-main);
+      padding: 20px 14px 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 3D badge on project cards */
+.badge-3d {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #e5e7eb;
+  background: rgba(34, 211, 238, 0.18);
+  border: 1px solid rgba(34, 211, 238, 0.55);
+  backdrop-filter: blur(6px);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.badge-3d::before {
+  content: "⬢ ";
+  font-weight: 900;
+}
+
+
+    .shell {
+      width: 100%;
+      max-width: var(--max-width);
+      background: linear-gradient(135deg, #020617, #050816);
+      border-radius: 26px;
+      padding: 2px;
+      box-shadow: var(--shadow);
+      border: 1px solid #111827;
+    }
+
+    .shell-inner {
+      border-radius: 24px;
+      background: radial-gradient(circle at top left, #020617 0, #020617 50%);
+      padding: 18px 18px 20px;
+    }
+
+    @media (min-width: 820px) {
+      .shell-inner { padding: 22px 24px 24px; }
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+    }
+
+    .logo-mark:hover {
+      box-shadow: 0 14px 34px rgba(79, 70, 229, 0.9);
+      transform: translateY(-1px);
+      transition: all 0.15s ease;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.86rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      background: rgba(15, 23, 42, 0.82);
+      transition: background 0.15s ease, color 0.15s, border-color 0.15s;
+    }
+
+    nav a:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent-soft-strong);
+      color: #e5e7ff;
+    }
+
+    .hero-text { margin-top: 8px; }
+
+    .eyebrow {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 3.2vw, 2.4rem);
+      letter-spacing: 0.03em;
+    }
+
+    h1 span.highlight {
+      background: linear-gradient(120deg, #4f46e5, #22d3ee);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .headline-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 640px;
+      line-height: 1.55;
+      margin-top: 6px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.75rem;
+    }
+
+    .tag {
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid #111827;
+      background: rgba(15, 23, 42, 0.95);
+      color: #9ca3af;
+    }
+
+    main { display: grid; gap: 16px; }
+
+    @media (min-width: 880px) {
+      main { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
+    }
+
+    .section-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.16), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+
+    .section-card:hover::before { opacity: 1; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .section-title { font-size: 1rem; font-weight: 600; }
+
+    .section-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .section-body p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .resume-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 7px 14px;
+      border: none;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s;
+      user-select: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #4f46e5, #06b6d4);
+      color: white;
+      box-shadow: 0 10px 30px rgba(79, 70, 229, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(79, 70, 229, 0.8);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #cbd5f5;
+      border: 1px solid #1f2937;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.85);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+    }
+
+    .info-list {
+      list-style: none;
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .info-list li + li { margin-top: 4px; }
+    .info-label { color: var(--text); font-weight: 500; }
+
+    /* Projects grid */
+    .project-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 600px) {
+      .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    .project-card {
+      border-radius: 12px;
+      border: 1px solid #111827;
+      background: #030712;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 150px;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(79, 70, 229, 0.6);
+      box-shadow: 0 16px 38px rgba(0,0,0,.45);
+    }
+
+    .project-card.active {
+      border-color: rgba(34, 211, 238, 0.7);
+      box-shadow: 0 18px 44px rgba(0,0,0,.55);
+    }
+
+    .project-thumb {
+      position: relative;
+      padding-top: 58%;
+      background: radial-gradient(circle at top, #111827, #020617 70%);
+      overflow: hidden;
+    }
+
+    .project-thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.1);
+      transition: transform 0.35s ease;
+    }
+
+    .project-card:hover .project-thumb img { transform: scale(1.04); }
+
+    .project-body {
+      padding: 8px 9px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .project-title { font-size: 0.9rem; font-weight: 600; }
+    .project-subtitle { font-size: 0.78rem; color: #9ca3af; }
+    .project-desc { margin-top: 4px; font-size: 0.8rem; color: #9ca3af; line-height: 1.45; }
+
+    .project-link {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: #a5b4fc;
+      text-decoration: none;
+    }
+    .project-link:hover { text-decoration: underline; }
+
+    .small-note { margin-top: 10px; font-size: 0.78rem; color: #6b7280; }
+
+    /* Selected project viewer panel */
+    .selected-wrap {
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.18);
+      background: rgba(2,6,23,.45);
+      overflow: hidden;
+    }
+
+    .selected-top {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(148,163,184,.18);
+      background: rgba(2,6,23,.65);
+    }
+
+    .selected-meta { display:flex; flex-direction:column; gap:2px; }
+
+    .selected-title { font-weight: 700; color: var(--text); font-size: .95rem; }
+    .selected-subtitle { color: var(--muted); font-size: .82rem; }
+
+    .selected-actions {
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+
+    .viewer-embed { height: 360px; background:#020617; }
+    .viewer-embed iframe { width: 100%; height: 100%; border: 0; display:block; background:#020617; }
+
+    .viewer-empty {
+      height: 360px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding: 16px;
+      color: var(--muted);
+      font-size:.9rem;
+      line-height:1.5;
+      background:#020617;
+    }
+
+    /* Modal */
+    .viewer-modal.hidden { display:none; }
+
+    .viewer-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(2,6,23,.75);
+      backdrop-filter: blur(6px);
+      display:flex;
+      flex-direction:column;
+    }
+
+    .viewer-modal-topbar {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(148,163,184,.18);
+      background: rgba(2,6,23,.85);
+    }
+
+    .viewer-modal-title { font-weight: 700; color: var(--text); }
+
+    .viewer-modal-body { flex: 1; padding: 12px; }
+
+    .viewer-modal-body iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 16px;
+      background:#020617;
+      display:block;
+    }
+
+    footer {
+      margin-top: 18px;
+      font-size: 0.76rem;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer a { color: #9ca3ff; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    a { cursor: pointer; }
+    code { color: #c7d2fe; }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="shell-inner">
+      <header>
+        <div class="top-row">
+          <a href="index.html" class="logo-link">
+            <div class="logo-mark">
+              <img src="assets/profile.png" alt="Alter Iterskiy profile photo">
+            </div>
+          </a>
+
+          <nav>
+            <a href="#about">About</a>
+            <a href="#resume">Resume</a>
+            <a href="#projects">Projects</a>
+            <a href="mailto:altersiterskiy@outlook.com">Contact</a>
+          </nav>
+        </div>
+
+        <div class="hero-text">
+          <div class="eyebrow">Alter Iterskiy · Civil & Construction Technology</div>
+          <h1>Portfolio of <span class="highlight">Alter Iterskiy</span></h1>
+          <p class="headline-sub">
+            Civil engineering student, construction inspector, and technology fan
+            running a self-hosted Raspberry&nbsp;Pi homelab. I like mixing
+            real-world infrastructure with software, automation, and hardware projects.
+          </p>
+          <div class="tag-row">
+            <div class="tag">Civil & Construction Engineering</div>
+            <div class="tag">Construction Technology</div>
+            <div class="tag">Raspberry Pi Homelab</div>
+            <div class="tag">Docker · Linux · Networking</div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <!-- LEFT COLUMN -->
+        <div>
+          <section id="about" class="section-card">
+            <div class="section-header">
+              <div class="section-title">About Me</div>
+              <div class="section-label">Background</div>
+            </div>
+            <div class="section-body">
+              <p>
+                I’m Alter Iterskiy, a civil/construction engineering student at NYC College of
+                Technology with hands-on experience as a special inspector on New York
+                City construction projects. I enjoy working at the intersection of
+                structural design, field inspections, and practical problem solving.
+              </p>
+              <p style="margin-top: 8px;">
+                Outside of school and work, I love to create my very own conceptual ideas.
+                Some of my concepts after being complete become part of a reality for example one of my concepts
+                are the gargae drive thru for a building in Neptune and Mcdonald avenue Brooklyn New York.
+                I also like to tinker alot thus i love spending time with my father in his construction business
+                learning the trade of construction and civil engineering.
+              </p>
+
+              <ul class="info-list">
+                <li><span class="info-label">Location:</span> New York City, USA</li>
+                <li><span class="info-label">Focus:</span> Civil & Construction engineering, foundations, and infrastructure</li>
+                <li><span class="info-label">Interests:</span> Engineering, Construction, Technology</li>
+              </ul>
+            </div>
+          </section>
+
+          <section id="resume" class="section-card" style="margin-top: 12px;">
+            <div class="section-header">
+              <div class="section-title">Resume</div>
+              <div class="section-label">Experience & Education</div>
+            </div>
+            <div class="section-body">
+              <p>
+                You can view or download my resume as a PDF. It includes details about
+                my education, field inspection work, and technical skills.
+              </p>
+              <div class="resume-actions">
+                <a class="btn btn-primary" href="assets/Alter_Iterskiy_Updated_Resume 2.pdf.pdf" target="_blank" rel="noopener noreferrer">
+                  View Resume (PDF) ↗
+                </a>
+                <a class="btn btn-ghost" href="assets/Alter_Iterskiy_Updated_Resume 2.pdf.pdf" download>
+                  Download Resume
+                </a>
+              </div>
+              <p class="small-note">
+                If the file doesn’t open, it may still be uploading or being updated on my server.
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <section id="projects" class="section-card">
+          <div class="section-header">
+            <div class="section-title">Projects</div>
+            <div class="section-label">Selected Work</div>
+          </div>
+
+          <div class="section-body">
+            <p>
+              A few highlights from my engineering studies and experiments. Click a card
+              to load it into the selected panel (and preview a 3D model if that project has one).
+            </p>
+
+            <!-- ✅ ONE selected project panel -->
+            <div class="selected-wrap" id="selectedWrap">
+              <div class="selected-top">
+                <div class="selected-meta">
+                  <div class="selected-title" id="selectedTitle">Select a project</div>
+                  <div class="selected-subtitle" id="selectedSubtitle">Click a card below to load details and a 3D model (if available).</div>
+                </div>
+
+                <div class="selected-actions">
+                  <a class="btn btn-ghost" id="selectedLink" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
+                    View more ↗
+                  </a>
+                  <button class="btn btn-primary" id="btnEnlarge" style="display:none;">Enlarge 3D</button>
+                </div>
+              </div>
+
+              <div class="viewer-embed" id="viewerEmbed" style="display:none;">
+                <iframe id="viewerFrame" src="" loading="lazy" title="Embedded OBJ Viewer"></iframe>
+              </div>
+
+              <div class="viewer-empty" id="viewerEmpty">
+                Select a project that includes a 3D model to preview it here.
+              </div>
+            </div>
+
+            <div id="project-grid" class="project-grid"></div>
+
+            <p class="small-note">
+              Add projects by editing <code>data/projects.json</code>.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>© <span id="year"></span> Alter Iterskiy · Personal portfolio & homelab project.</span>
+        <span>Hosted on a Raspberry Pi with Docker.</span>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ✅ ONE Modal (enlarge viewer) -->
+  <div id="viewerModal" class="viewer-modal hidden" aria-hidden="true">
+    <div class="viewer-modal-topbar">
+      <div class="viewer-modal-title" id="modalTitle">3D Model</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="btn btn-ghost" id="btnFullscreen">Fullscreen</button>
+        <button class="btn btn-danger" id="btnCloseModal">Close</button>
+      </div>
+    </div>
+    <div class="viewer-modal-body">
+      <iframe id="viewerFrameLarge" src="" title="Large OBJ Viewer"></iframe>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const grid = document.getElementById("project-grid");
+
+    const selectedTitle = document.getElementById("selectedTitle");
+    const selectedSubtitle = document.getElementById("selectedSubtitle");
+    const selectedLink = document.getElementById("selectedLink");
+
+    const viewerEmbed = document.getElementById("viewerEmbed");
+    const viewerEmpty = document.getElementById("viewerEmpty");
+    const viewerFrame = document.getElementById("viewerFrame");
+    const btnEnlarge = document.getElementById("btnEnlarge");
+
+    const modal = document.getElementById("viewerModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const viewerFrameLarge = document.getElementById("viewerFrameLarge");
+    const btnCloseModal = document.getElementById("btnCloseModal");
+    const btnFullscreen = document.getElementById("btnFullscreen");
+
+    let currentModelUrl = "";
+
+    function sanitizeProjectLink(value) {
+      const raw = (value || "").trim();
+      if (!raw || raw === "#") return "#";
+
+      if (!/^[a-z]+:/i.test(raw)) {
+        return raw.startsWith("//") ? "#" : raw;
+      }
+
+      try {
+        const url = new URL(raw, location.origin);
+        if (!["http:", "https:"].includes(url.protocol)) return "#";
+        return url.href;
+      } catch (error) {
+        return "#";
+      }
+    }
+
+    function buildViewerUrl(obj, mtl) {
+      const qs = new URLSearchParams();
+      qs.set("v", "2");
+      qs.set("obj", obj);
+      if (mtl) qs.set("mtl", mtl);
+      return "obj-viewer.html?" + qs.toString();
+    }
+
+    function setSelectedProject(p, cardEl) {
+      document.querySelectorAll(".project-card").forEach(c => c.classList.remove("active"));
+      if (cardEl) cardEl.classList.add("active");
+
+      selectedTitle.textContent = p.title || "Untitled Project";
+      selectedSubtitle.textContent = p.subtitle || p.description || "";
+
+      const safeLink = sanitizeProjectLink(p.link);
+      if (safeLink !== "#") {
+        selectedLink.style.display = "inline-flex";
+        selectedLink.href = safeLink;
+      } else {
+        selectedLink.style.display = "none";
+        selectedLink.href = "#";
+      }
+
+      // Only show viewer when this project has obj (and optional mtl)
+      if (p.obj) {
+        currentModelUrl = buildViewerUrl(p.obj, p.mtl || "");
+        viewerFrame.src = currentModelUrl;
+
+        viewerEmpty.style.display = "none";
+        viewerEmbed.style.display = "block";
+        btnEnlarge.style.display = "inline-flex";
+      } else {
+        currentModelUrl = "";
+        viewerFrame.src = "";
+
+        viewerEmbed.style.display = "none";
+        viewerEmpty.style.display = "flex";
+        btnEnlarge.style.display = "none";
+      }
+    }
+
+    function openModal() {
+      if (!currentModelUrl) return;
+      modalTitle.textContent = selectedTitle.textContent || "3D Model";
+      viewerFrameLarge.src = currentModelUrl;
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
+      viewerFrameLarge.src = "";
+    }
+
+    btnEnlarge.addEventListener("click", openModal);
+    btnCloseModal.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.classList.contains("hidden")) closeModal();
+    });
+
+    btnFullscreen.addEventListener("click", async () => {
+      const el = viewerFrameLarge.parentElement;
+      try {
+        if (!document.fullscreenElement) await el.requestFullscreen();
+        else await document.exitFullscreen();
+      } catch (err) {
+        console.warn("Fullscreen failed:", err);
+      }
+    });
+
+    fetch("data/projects.json?ts=" + Date.now())
+      .then((res) => res.json())
+      .then((projects) => {
+        grid.innerHTML = "";
+
+        let firstWithModelIndex = -1;
+
+        projects.forEach((p, idx) => {
+          const card = document.createElement("article");
+          card.className = "project-card";
+
+          const thumb = document.createElement("div");
+          thumb.className = "project-thumb";
+
+          const img = document.createElement("img");
+          img.src = p.image;
+          img.alt = p.title || "Project thumbnail";
+          thumb.appendChild(img);
+
+          // ✅ Show 3D badge if this project has a model
+if (p.obj) {
+  const badge = document.createElement("div");
+  badge.className = "badge-3d";
+  badge.textContent = "3D";
+  thumb.appendChild(badge);
+}
+
+
+          const body = document.createElement("div");
+          body.className = "project-body";
+
+          const title = document.createElement("div");
+          title.className = "project-title";
+          title.textContent = p.title || "Untitled";
+
+          const subtitle = document.createElement("div");
+          subtitle.className = "project-subtitle";
+          subtitle.textContent = p.subtitle || "";
+
+          const desc = document.createElement("div");
+          desc.className = "project-desc";
+          desc.textContent = p.description || "";
+
+          body.appendChild(title);
+          body.appendChild(subtitle);
+          body.appendChild(desc);
+
+          const safeLink = sanitizeProjectLink(p.link);
+          if (safeLink !== "#") {
+            const link = document.createElement("a");
+            link.className = "project-link";
+            link.href = safeLink;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "View more ↗";
+            link.addEventListener("click", (e) => e.stopPropagation());
+            body.appendChild(link);
+          }
+
+          card.appendChild(thumb);
+          card.appendChild(body);
+
+          card.addEventListener("click", () => setSelectedProject(p, card));
+
+          grid.appendChild(card);
+
+          if (firstWithModelIndex === -1 && p.obj) firstWithModelIndex = idx;
+        });
+
+        // Auto-select: first with model, else first project
+        const cards = Array.from(document.querySelectorAll(".project-card"));
+        if (projects.length) {
+          const pick = firstWithModelIndex >= 0 ? firstWithModelIndex : 0;
+          setSelectedProject(projects[pick], cards[pick]);
+        }
+      })
+      .catch((err) => console.error("Error loading projects.json", err));
+  </script>
+</body>
+</html>

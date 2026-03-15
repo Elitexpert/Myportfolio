@@ -1,0 +1,62 @@
+[
+  {
+    "title": "My personal Project",
+    "subtitle": "Personal projects · Interactive 3D Revit model",
+    "image": "projects/Revitmodelimage.png",
+    "description": "This is my 3d model of the personal home project . click to see full 3d model. This model gets updated regulary .",
+    "link": "#",
+    "obj": "models/one.obj",
+    "mtl": "models/one.mtl",
+    "id": "p_1767937991637_87315",
+    "created_at": 1767937991
+  },
+  {
+    "title": "My School projects coming soon",
+    "subtitle": "This were you would see all of my school projects that I have done to be updated soon",
+    "image": "projects/schoolproject.png",
+    "description": " this school project is currently work in progress and will be updated soon . project title PLumbing system design ",
+    "link": "#",
+    "obj": "models/two.obj",
+    "mtl": "models/two.mtl",
+    "id": "p_1767937991637_60633",
+    "created_at": 1767937991
+  },
+  {
+    "title": "New Jersey Cruise Terminal",
+    "subtitle": "Norwegian Cruise Line terminal",
+    "image": "projects/NewJerseyCruisterminalConcreteTest.jpeg",
+    "description": "Provided concrete testing services for the New Jersey cruise terminal project.",
+    "link": "#",
+    "id": "p_1767937991637_67035",
+    "created_at": 1767937991,
+    "photos": [],
+    "updated_at": 1767942777
+  },
+  {
+    "title": "3rd Place – ASCE MET SEC Structural Engineering Competition",
+    "subtitle": "Regional collegiate competition",
+    "image": "projects/3rdplace.jpeg",
+    "description": "Placed 3rd among universities in the metropolitan area including Cooper Union, NYU, Yale University, and Columbia University.",
+    "link": "#",
+    "id": "p_1767937991637_30508",
+    "created_at": 1767937991
+  },
+  {
+    "title": "Soils Testing",
+    "subtitle": "NYSDOT · Field & lab work at Kew Gardens Interchange",
+    "image": "projects/3D5A3D7C-6ADC-4DE8-B173-4BD4AE5B7AA2.jpg",
+    "description": "Worked as a TCI performing field and laboratory soils testing including SPTs, moisture content, Atterberg limits, and grain size analysis.",
+    "link": "#",
+    "id": "p_1767937991638_62109",
+    "created_at": 1767937991
+  },
+  {
+    "title": "NYCDDC Coastal Resiliency Project – Manhattan",
+    "subtitle": "Special inspections",
+    "image": "projects/20240412_141513.jpeg",
+    "description": "Performed special inspections and quality assurance tasks for the Manhattan coastal resiliency project.",
+    "link": "#",
+    "id": "p_1767937991638_63900",
+    "created_at": 1767937991
+  }
+]

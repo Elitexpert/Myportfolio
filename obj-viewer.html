@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OBJ Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✅ IMPORT MAP (FIXES "three" ERROR) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/"
+    }
+  }
+  </script>
+
+  <style>
+    html, body {
+      margin:0; padding:0; width:100%; height:100%;
+      background:#020617; overflow:hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    #viewer { width:100%; height:100%; }
+
+    .overlay {
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      pointer-events:none;
+    }
+    .panel {
+      width:min(560px, 92vw);
+      background: rgba(2,6,23,.82);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 18px 45px rgba(0,0,0,.6);
+      backdrop-filter: blur(8px);
+    }
+    .title { color:#e5e7eb; font-size:.95rem; font-weight:600; margin-bottom:6px; }
+    .sub { color:#94a3b8; font-size:.78rem; margin-bottom:10px; white-space:pre-wrap; }
+    .bar { height:10px; background: rgba(148,163,184,.18); border-radius:999px; overflow:hidden; }
+    .fill {
+      height:100%; width:0%;
+      background: linear-gradient(90deg,#4f46e5,#06b6d4);
+      transition: width 120ms ease;
+    }
+    .fill.indeterminate {
+      width:35%;
+      animation: indet 1.05s ease-in-out infinite;
+    }
+    @keyframes indet {
+      0% { transform: translateX(-120%); }
+      50% { transform: translateX(120%); }
+      100% { transform: translateX(320%); }
+    }
+    .meta {
+      margin-top:10px;
+      display:flex; justify-content:space-between;
+      color:#9ca3af; font-size:.82rem;
+    }
+    .error {
+      color:#fca5a5;
+      font-size:.8rem;
+      margin-top:10px;
+      white-space:pre-wrap;
+    }
+    .hidden { display:none; }
+  </style>
+</head>
+
+<body>
+  <div id="viewer"></div>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <div class="title" id="status">Starting…</div>
+      <div class="sub" id="debug"></div>
+      <div class="bar"><div class="fill" id="fill"></div></div>
+      <div class="meta">
+        <span id="percent">0%</span>
+        <span id="bytes">0 MB</span>
+      </div>
+      <div class="error" id="error"></div>
+    </div>
+  </div>
+
+  <!-- ✅ REAL MODULE SCRIPT (NO src ATTRIBUTE) -->
+  <script type="module">
+    import * as THREE from "three";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+    import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
+    import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
+
+    console.log("OBJ VIEWER MODULE RUNNING");
+
+    const container = document.getElementById("viewer");
+    const overlay = document.getElementById("overlay");
+    const statusEl = document.getElementById("status");
+    const debugEl = document.getElementById("debug");
+    const fillEl = document.getElementById("fill");
+    const percentEl = document.getElementById("percent");
+    const bytesEl = document.getElementById("bytes");
+    const errorEl = document.getElementById("error");
+
+    const params = new URLSearchParams(window.location.search);
+
+    function normalizeModelPath(rawValue, allowedExtensions) {
+      const value = (rawValue || "").trim();
+      if (!value) return "";
+      if (/^[a-z][a-z0-9+.-]*:/i.test(value) || value.startsWith("//") || value.includes("..")) {
+        return "";
+      }
+
+      const normalized = value.replace(/^\/+/, "");
+      if (!normalized.startsWith("models/")) return "";
+
+      const lower = normalized.toLowerCase();
+      return allowedExtensions.some((extension) => lower.endsWith(extension)) ? normalized : "";
+    }
+
+    const rawObjPath = params.get("obj");
+    const rawMtlPath = params.get("mtl");
+    const objPath = normalizeModelPath(rawObjPath, [".obj", ".gltf", ".glb"]);
+    const mtlPath = normalizeModelPath(rawMtlPath, [".mtl"]);
+
+    debugEl.textContent = `OBJ: ${objPath}` + (mtlPath ? `\nMTL: ${mtlPath}` : "");
+
+    if (rawObjPath && !objPath) {
+      statusEl.textContent = "Invalid OBJ path";
+      errorEl.textContent = "The viewer only loads local files from the models folder.";
+      throw new Error("Invalid ?obj");
+    }
+
+    if (rawMtlPath && !mtlPath) {
+      statusEl.textContent = "Invalid MTL path";
+      errorEl.textContent = "The viewer only loads local files from the models folder.";
+      throw new Error("Invalid ?mtl");
+    }
+
+    if (!objPath) {
+      statusEl.textContent = "Missing OBJ file";
+      errorEl.textContent = "Use ?obj=models/one.obj&mtl=models/one.mtl";
+      throw new Error("Missing ?obj");
+    }
+
+    const toMB = b => (b / (1024 * 1024)).toFixed(1);
+
+    function setProgress(loaded, total) {
+      if (total > 0) {
+        const p = Math.min(100, Math.round((loaded / total) * 100));
+        fillEl.classList.remove("indeterminate");
+        fillEl.style.width = p + "%";
+        percentEl.textContent = p + "%";
+        bytesEl.textContent = `${toMB(loaded)} / ${toMB(total)} MB`;
+      } else {
+        fillEl.classList.add("indeterminate");
+        percentEl.textContent = "…";
+        bytesEl.textContent = `${toMB(loaded)} MB`;
+      }
+    }
+
+    function xhrLoad(url, label) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = "text";
+        xhr.onprogress = e => {
+          statusEl.textContent = label;
+          setProgress(e.loaded || 0, e.total || 0);
+        };
+        xhr.onload = () => xhr.status >= 200 && xhr.status < 300
+          ? resolve(xhr.responseText)
+          : reject(`HTTP ${xhr.status} → ${url}`);
+        xhr.onerror = () => reject(`Network error → ${url}`);
+        xhr.send();
+      });
+    }
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x020617);
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1e9);
+    const renderer = new THREE.WebGLRenderer({ antialias:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+    const sun = new THREE.DirectionalLight(0xffffff, 1);
+    sun.position.set(300,600,300);
+    scene.add(sun);
+
+    function fitObject(obj) {
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+
+      obj.position.sub(center);
+
+      const max = Math.max(size.x, size.y, size.z, 1e-6);
+      const scale = 300 / max;
+      obj.scale.setScalar(scale);
+
+      const dist = max * scale * 1.6;
+      camera.position.set(dist, dist * 0.6, dist);
+      camera.lookAt(0,0,0);
+      controls.target.set(0,0,0);
+      controls.update();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener("resize", () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    (async () => {
+      try {
+        let materials = null;
+
+        if (mtlPath) {
+          const mtlText = await xhrLoad(mtlPath, "Downloading MTL…");
+          const mtl = new MTLLoader().parse(mtlText, mtlPath.replace(/[^/]+$/, ""));
+          mtl.preload();
+          materials = mtl;
+        }
+
+        const objText = await xhrLoad(objPath, "Downloading OBJ…");
+        const loader = new OBJLoader();
+        if (materials) loader.setMaterials(materials);
+
+        const obj = loader.parse(objText);
+        scene.add(obj);
+        fitObject(obj);
+
+        overlay.classList.add("hidden");
+        animate();
+      } catch (e) {
+        statusEl.textContent = "Failed to load model";
+        errorEl.textContent = String(e);
+        console.error(e);
+      }
+    })();
+  </script>
+</body>
+</html>
